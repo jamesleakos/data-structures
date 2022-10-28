@@ -6,15 +6,34 @@ var HashTable = function() {
 };
 
 HashTable.prototype.insert = function(k, v) {
-  var index = getIndexBelowMaxForKey(k, this._limit);
+
+  if (this.retrieve(k) !== undefined) {
+    this._limit *= 2;
+    var newTable = LimitedArray(this._limit);
+
+    this._storage.each(function(element, key, storage) {
+      var newIndex = getIndexBelowMaxForKey(key, this._limit);
+      newTable.set(newIndex, element);
+    });
+
+    this._storage = newTable;
+  }
+  index = getIndexBelowMaxForKey(k, this._limit);
+  this._storage.set(index, v);
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
+  return this._storage.get(index);
 };
 
 HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
+  this._storage.each(function(element, i, storage) {
+    if (i === index) {
+      storage.splice(i, 1);
+    }
+  });
 };
 
 
