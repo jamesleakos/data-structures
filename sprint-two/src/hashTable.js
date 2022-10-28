@@ -6,25 +6,32 @@ var HashTable = function() {
 };
 
 HashTable.prototype.insert = function(k, v) {
-
-  if (this.retrieve(k) !== undefined) {
-    this._limit *= 2;
-    var newTable = LimitedArray(this._limit);
-
-    this._storage.each(function(element, key, storage) {
-      var newIndex = getIndexBelowMaxForKey(key, this._limit);
-      newTable.set(newIndex, element);
-    });
-
-    this._storage = newTable;
-  }
   index = getIndexBelowMaxForKey(k, this._limit);
-  this._storage.set(index, v);
+  var bucket = this._storage.get(index);
+  if (bucket === undefined) {
+    this._storage.set(index, [[k, v]]);
+    return;
+  }
+  for (var i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === k) {
+      bucket[i][1] = v;
+      return;
+    }
+  }
+  bucket.push([k, v]);
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  return this._storage.get(index);
+  var bucket = this._storage.get(index);
+  if (bucket === undefined) {
+    return;
+  }
+  for (var i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === k) {
+      return bucket[i][1];
+    }
+  }
 };
 
 HashTable.prototype.remove = function(k) {
@@ -36,6 +43,17 @@ HashTable.prototype.remove = function(k) {
   });
 };
 
+// HashTable.prototype.expand = function() {
+//   this._limit *= 2;
+//   var newTable = LimitedArray(this._limit);
+
+//   this._storage.each(function(element, key, storage) {
+//     var newIndex = getIndexBelowMaxForKey(key, this._limit);
+//     newTable.set(newIndex, element);
+//   });
+
+//   this._storage = newTable;
+// };
 
 
 /*
