@@ -34,21 +34,7 @@ BinarySearchTree.prototype.insert = function(value) {
     }
   }
 
-  // find min
-  if (this.left === null || this.right === null) {
-    this.min = 0;
-  } else {
-    this.min = Math.min(this.left.min, this.right.min) + 1;
-  }
-
-  // find max
-  if (this.left === null && this.right === null) {
-    this.max = 0;
-  } else {
-    var leftMax = this.left !== null ? this.left.max : 0;
-    var rightMax = this.right !== null ? this.right.max : 0;
-    this.max = Math.max(leftMax, rightMax) + 1;
-  }
+  this.setMinMax();
 };
 
 BinarySearchTree.prototype.contains = function(value) {
@@ -127,6 +113,26 @@ BinarySearchTree.prototype.createTree = function (arr) {
     var rightTree = BinarySearchTree(null);
     // call rightTree.createTree(rightArr)
     rightTree.createTree(rightArr);
+  }
+
+  this.setMinMax();
+};
+
+BinarySearchTree.prototype.setMinMax = function () {
+  // find min
+  if (this.left === null || this.right === null) {
+    this.min = 0;
+  } else {
+    this.min = Math.min(this.left.min, this.right.min) + 1;
+  }
+
+  // find max
+  if (this.left === null && this.right === null) {
+    this.max = 0;
+  } else {
+    var leftMax = this.left !== null ? this.left.max : 0;
+    var rightMax = this.right !== null ? this.right.max : 0;
+    this.max = Math.max(leftMax, rightMax) + 1;
   }
 };
 
