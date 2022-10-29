@@ -48,25 +48,25 @@ WordSearchTree.prototype.findWordFromLetters = function (letters) {
         if (child.endsWord) {
           words.push(child.letterChain);
         }
-        var newLetters = letters.slice(1);
-        if (newLetters > 0) {
-          child.findWordFromLetters(newLetters);
+        var newLetters = letters.slice();
+        newLetters.splice(l, 1);
+        if (newLetters.length > 0) {
+          words = words.concat(child.findWordFromLetters(newLetters));
         }
       }
     }
   }
 
-  return words;
+  return _.uniq(words);
 };
 
 WordSearchTree.prototype.getAllWords = function () {
   var words = [];
+  if (this.endsWord) {
+    words.push(this.letterChain);
+  }
   for (var i = 0; i < this.children.length; i++) {
-    var child = this.children[i];
-    if (child.endsWord) {
-      words.push(child.letterChain);
-    }
-    words.concat(child.getAllWords);
+    words = words.concat(this.children[i].getAllWords());
   }
   return words;
 };
