@@ -3,6 +3,8 @@ var BinarySearchTree = function(value) {
   newBinarySearchTree.value = value;
   newBinarySearchTree.left = null;
   newBinarySearchTree.right = null;
+  newBinarySearchTree.min = 0;
+  newBinarySearchTree.max = 0;
 
   return newBinarySearchTree;
 };
@@ -30,6 +32,22 @@ BinarySearchTree.prototype.insert = function(value) {
     } else {
       this.right.insert(value);
     }
+  }
+
+  // find min
+  if (this.left === null || this.right === null) {
+    this.min = 0;
+  } else {
+    this.min = Math.min(this.left.min, this.right.min) + 1;
+  }
+
+  // find max
+  if (this.left === null && this.right === null) {
+    this.max = 0;
+  } else {
+    var leftMax = this.left !== null ? this.left.max : 0;
+    var rightMax = this.right !== null ? this.right.max : 0;
+    this.max = Math.max(leftMax, rightMax) + 1;
   }
 };
 
@@ -67,6 +85,48 @@ BinarySearchTree.prototype.depthFirstLog = function(callback) {
   if (this.right !== null) {
     // run callback on right tree
     this.right.depthFirstLog(callback);
+  }
+};
+
+BinarySearchTree.prototype.rebalance = function () {
+  // first we make the array using depth first log
+  var array = [];
+  this.depthFirstLog(function () {
+    array.push(this.value);
+  });
+  // sort the array
+  array.sort(function(a, b) {
+    return a - b;
+  });
+
+  // call createTree(arr)
+  this.createTree(array);
+};
+
+BinarySearchTree.prototype.createTree = function (arr) {
+  var middleIndex = Math.floor((arr.length - 1) / 2);
+  // get middle value
+  var middleValue = arr[middleIndex];
+  // get value to middle value
+  this.value = middleValue;
+  // create leftArr
+  var leftArr = arr.slice(0, middleIndex);
+  // create rightArry
+  var rightArr = arr.slice(middleIndex + 1);
+
+  // if leftArr
+  if (leftArr.length > 0) {
+    //create leftTree
+    var leftTree = BinarySearchTree(null);
+    // call leftTree.createTree(leftArr)
+    leftTree.createTree(leftArr);
+  }
+  // if rightArr
+  if (rightArr.length > 0) {
+    // create rightTree
+    var rightTree = BinarySearchTree(null);
+    // call rightTree.createTree(rightArr)
+    rightTree.createTree(rightArr);
   }
 };
 
