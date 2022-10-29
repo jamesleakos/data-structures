@@ -12,10 +12,7 @@ var BinarySearchTree = function(value) {
 BinarySearchTree.prototype = {};
 
 BinarySearchTree.prototype.insert = function(value) {
-  // if (this.value === null) {
-  //   this.value = value;
-  //   return;
-  // }
+
   // check if we need to rebalance
   if (this.min * 2 < this.max && this.min + 1 < this.max) {
     this.rebalance();

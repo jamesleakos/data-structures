@@ -63,7 +63,6 @@ describe('hashTable', function() {
       var firstName = person[0];
       var lastName = person[1];
       hashTable.insert(firstName, lastName);
-      console.log('added ' + firstName + ' ' + lastName + '. Size is now: ' + hashTable._size);
       expect(hashTable.retrieve(firstName)).to.equal(lastName);
     });
     expect(hashTable._limit).to.equal(16);
