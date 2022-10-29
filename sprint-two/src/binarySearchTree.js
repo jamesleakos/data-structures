@@ -12,6 +12,11 @@ var BinarySearchTree = function(value) {
 BinarySearchTree.prototype = {};
 
 BinarySearchTree.prototype.insert = function(value) {
+  // DELETE LATER IF NEEDED
+  if (this.value === null) {
+    this.value = value;
+    return;
+  }
   // check if inpuuted value is greater than or less than current value
   if (value === this.value) {
     return;
@@ -77,13 +82,18 @@ BinarySearchTree.prototype.depthFirstLog = function(callback) {
 BinarySearchTree.prototype.rebalance = function () {
   // first we make the array using depth first log
   var array = [];
-  this.depthFirstLog(function () {
-    array.push(this.value);
+  this.depthFirstLog(function (value) {
+    array.push(value);
   });
   // sort the array
   array.sort(function(a, b) {
     return a - b;
   });
+
+  // todo: remove left and right
+  this.left = null;
+  this.right = null;
+  this.value = null;
 
   // call createTree(arr)
   this.createTree(array);
@@ -91,32 +101,39 @@ BinarySearchTree.prototype.rebalance = function () {
 
 BinarySearchTree.prototype.createTree = function (arr) {
   var middleIndex = Math.floor((arr.length - 1) / 2);
-  // get middle value
   var middleValue = arr[middleIndex];
-  // get value to middle value
-  this.value = middleValue;
-  // create leftArr
+
+  this.insert(middleValue);
+
   var leftArr = arr.slice(0, middleIndex);
-  // create rightArry
   var rightArr = arr.slice(middleIndex + 1);
 
-  // if leftArr
   if (leftArr.length > 0) {
-    //create leftTree
-    var leftTree = BinarySearchTree(null);
-    // call leftTree.createTree(leftArr)
-    leftTree.createTree(leftArr);
+    this.createTree(leftArr);
   }
-  // if rightArr
   if (rightArr.length > 0) {
-    // create rightTree
-    var rightTree = BinarySearchTree(null);
-    // call rightTree.createTree(rightArr)
-    rightTree.createTree(rightArr);
+    this.createTree(rightArr);
   }
-
-  this.setMinMax();
 };
+
+// BinarySearchTree.prototype.createTree = function (arr) {
+//   var middleIndex = Math.floor((arr.length - 1) / 2);
+//   var middleValue = arr[middleIndex];
+//   this.value = middleValue;
+//   var leftArr = arr.slice(0, middleIndex); //
+//   var rightArr = arr.slice(middleIndex + 1);
+
+//   if (leftArr.length > 0) {
+//     this.left = BinarySearchTree(null);
+//     this.left.createTree(leftArr);
+//   }
+//   if (rightArr.length > 0) {
+//     this.right = BinarySearchTree(null);
+//     this.right.createTree(rightArr);
+//   }
+
+//   this.setMinMax();
+// };
 
 BinarySearchTree.prototype.setMinMax = function () {
   // find min
